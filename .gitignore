@@ -1,3 +1,7 @@
+build
+.idea/
+CMakeUserPresets.json
+
 # Prerequisites
 *.d
 
