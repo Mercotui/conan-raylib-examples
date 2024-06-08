@@ -1,6 +1,13 @@
-# Raylib Conan Example projects
+# Raylib Conan Examples
 
 This repo contains a simple raylib example, and the conan files to build it for different targets.
+
+It shows you how to:
+- Use emscripten to run your c/c++ game in a web-browser
+  - Using a custom html shell template 
+  - Embedding external dependencies
+- TODO: Use android SKD to compile for smartphones
+- TODO: Use wayland or X11 for desktop builds
 
 ## Dependencies
 
