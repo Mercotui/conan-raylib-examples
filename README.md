@@ -1,13 +1,13 @@
 # Raylib Conan Examples
 
-This repo contains a simple raylib example, and the conan files to build it for different targets.
+This repo contains a simple [raylib](https://github.com/raysan5/raylib/) example, and the conan files to build it for different targets.
 
 It shows you how to:
+- Use wayland or X11 for desktop builds
 - Use emscripten to run your c/c++ game in a web-browser
   - Using a custom html shell template 
   - Embedding external dependencies
 - TODO: Use android SKD to compile for smartphones
-- TODO: Use wayland or X11 for desktop builds
 
 ## Dependencies
 
@@ -19,33 +19,16 @@ pipx install conan
 conan profile detect --force
 ```
 
-## Build
+## Building
 
-To build this project use:
-
-```bash
-# install dependencies for release
-conan install -u -pr:b=default -pr:h=profiles/emscripten.profile --build=missing  --settings=build_type=Release .
-
-# configure cmake
-cmake -G Ninja --preset conan-emscripten-release
-
-# build for release
-cmake --build --preset conan-emscripten-release
-```
-
-The output html, js, and wasm can then be found in `build/emscripten/Release/src`.
-
-# Run
-
-To run the build in your browser use any webserver, I prefer to use caddy:
+If you want to run the example app on your local machine, you can run:
 
 ```bash
-caddy file-server --listen localhost:8000 -r build/emscripten/Release/src
+conan install -u -pr:b=default -pr:h=default --build=missing  --settings=build_type=Release .
+cmake --build --preset conan-linux-release
+./build/linux/Release/src/raylib_example
 ```
 
-Then visit the url:
-
-```
-http://localhost:8000/raylib_example.html
-```
+For other platforms you can find more details here:
+- Linux X11 or Wayland [readme](README-LINUX.md)
+- Web html5 wasm [readme](README-WEB.md)
