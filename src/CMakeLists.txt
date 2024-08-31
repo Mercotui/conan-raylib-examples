@@ -1,9 +1,29 @@
 find_package(raylib 5.0 REQUIRED)
 
-# Minimal example executable
-add_executable(raylib_example main.cpp)
+if (ANDROID)
+    # Android doesn't want an executable, but instead a library that can be dynamically loaded
+    add_library(raylib_example SHARED)
+    target_include_directories(raylib_example PRIVATE ${ANDROID_NDK_ROOT}/sources/)
+else ()
+    # All other platforms can directly run an executable
+    add_executable(raylib_example)
+endif ()
 
-if (EMSCRIPTEN)
+# The main.cpp file is used by all our platforms
+target_sources(raylib_example PRIVATE main.cpp)
+
+if (ANDROID)
+    # The functions (symbols) in native app glue are used by android at runtime
+    target_sources(raylib_example PRIVATE ${ANDROID_NDK_ROOT}/sources/android/native_app_glue/android_native_app_glue.c)
+    # We use -u to tell the linker to keep this symbol, it is only used dynamically at runtime, and LinkTimeOptimization
+    # would otherwise strip it out of our binary. That results in the app "crashing" on startup.
+    target_link_options(raylib_example PUBLIC -u ANativeActivity_onCreate)
+
+    # Android has a few extra libraries that we need to link, I got this list of libraries from this wiki entry,
+    # stripping away what I did not need:
+    #  https://github.com/raysan5/raylib/wiki/Working-for-Android-(on-Linux)#build
+    target_link_libraries(raylib_example PRIVATE log android EGL GLESv2)
+elseif (EMSCRIPTEN)
     # Feel free to use another compile definition, that's just user defined
     target_compile_definitions(raylib_example PRIVATE PLATFORM_WEB)
 
@@ -37,4 +57,5 @@ else ()
     configure_file(velperpoort_cat.png cat.png COPYONLY)
 endif ()
 
+# We link to raylib on every platform, ofcourse.
 target_link_libraries(raylib_example PRIVATE raylib)
