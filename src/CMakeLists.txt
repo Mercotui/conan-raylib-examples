@@ -1,4 +1,5 @@
-find_package(raylib 5.0 REQUIRED)
+find_package(raylib 5.5 REQUIRED)
+message("Using raylib: ${raylib_DIR}")
 
 if (ANDROID)
     # Android doesn't want an executable, but instead a library that can be dynamically loaded
